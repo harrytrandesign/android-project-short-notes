@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<String> notesListItems;
     ArrayAdapter<String> notesAdapter;
     Boolean hasRun;
-    SharedPreferences storage = null;
+    SharedPreferences appIntro = null;
     EditText userNoteEditTextField;
     ListView userNoteListView;
 
@@ -117,12 +117,9 @@ public class MainActivity extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
 
-//        storage = this.getSharedPreferences("us.wetpaws.essentialnotes", Context.MODE_PRIVATE);
-//        storage.edit().putBoolean("firstAccess", true).apply();
-//
-//        firstLoad = storage.getBoolean("firstAccess", true);
-
-//        Log.i("notes", String.valueOf(firstLoad));
+        // Check if app is running for the very first time.
+        appIntro = getSharedPreferences("hasRunBefore_appIntro", 0); // Load the preferences.
+        hasRun = appIntro.getBoolean("hasRun_appIntro", false); // See if it's been run before with the default set as no.
 
         userNoteEditTextField = (EditText) findViewById(R.id.noteInputField);
         userNoteListView = (ListView) findViewById(R.id.notesListView);
@@ -169,14 +166,22 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-//        if (firstLoad) {
-//            notesListItems.add(getResources().getString(R.string.note_hint_text));
-//            notesListItems.add(getResources().getString(R.string.note_delete_text));
-//
-////            storage.edit().putBoolean("firstAccess", false).apply();
-////            firstLoad = storage.getBoolean("firstAccess", true);
-//
-//        }
+        Log.i("notes", "Before " + String.valueOf(hasRun));
+
+        if (!hasRun) {
+
+            // Save information that shows the app has now already run first time.
+            SharedPreferences settings = getSharedPreferences("hasRunBefore_appIntro", 0);
+            SharedPreferences.Editor edit = settings.edit();
+            edit.putBoolean("hasRun_appIntro", true);
+            edit.apply();
+
+            notesListItems.add(getResources().getString(R.string.note_hint_text));
+            notesListItems.add(getResources().getString(R.string.note_delete_text));
+
+        }
+
+        Log.i("notes", "After " + String.valueOf(hasRun));
 
         notesListItems.add("Second Note is here");
         notesListItems.add("This is the length of a note, this is the size of the text that will be held in this text field, the length is constricted by the parameter.");
