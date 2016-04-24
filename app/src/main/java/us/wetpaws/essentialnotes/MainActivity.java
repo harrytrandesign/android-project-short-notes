@@ -28,8 +28,8 @@ public class MainActivity extends AppCompatActivity {
 
     ArrayList<String> notesListItems;
     ArrayAdapter<String> notesAdapter;
-//    boolean firstLoad;
-//    SharedPreferences storage;
+    Boolean hasRun;
+    SharedPreferences storage = null;
     EditText userNoteEditTextField;
     ListView userNoteListView;
 
@@ -169,14 +169,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        if (firstLoad) {
-            notesListItems.add(getResources().getString(R.string.note_hint_text));
-            notesListItems.add(getResources().getString(R.string.note_delete_text));
-
-//            storage.edit().putBoolean("firstAccess", false).apply();
-//            firstLoad = storage.getBoolean("firstAccess", true);
-
-        }
+//        if (firstLoad) {
+//            notesListItems.add(getResources().getString(R.string.note_hint_text));
+//            notesListItems.add(getResources().getString(R.string.note_delete_text));
+//
+////            storage.edit().putBoolean("firstAccess", false).apply();
+////            firstLoad = storage.getBoolean("firstAccess", true);
+//
+//        }
 
         notesListItems.add("Second Note is here");
         notesListItems.add("This is the length of a note, this is the size of the text that will be held in this text field, the length is constricted by the parameter.");
