@@ -2,6 +2,7 @@ package us.wetpaws.essentialnotes;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
@@ -14,10 +15,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -25,9 +28,11 @@ public class MainActivity extends AppCompatActivity {
 
     ArrayList<String> notesListItems;
     ArrayAdapter<String> notesAdapter;
-    boolean showHintNote = true;
+//    boolean firstLoad;
+//    SharedPreferences storage;
     EditText userNoteEditTextField;
     ListView userNoteListView;
+
 
     public void openDeleteNoteDialogBox(int oneOrTwo) {
         int option = oneOrTwo;
@@ -43,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.cancel();
+                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.delete_confirmation), Toast.LENGTH_SHORT).show();
                 }
             });
             build.setNegativeButton(R.string.option_choice_no, new DialogInterface.OnClickListener() {
@@ -61,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.cancel();
+                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.delete_confirmation), Toast.LENGTH_SHORT).show();
                 }
             });
             build.setNegativeButton(R.string.option_choice_no, new DialogInterface.OnClickListener() {
@@ -110,6 +117,13 @@ public class MainActivity extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
 
+//        storage = this.getSharedPreferences("us.wetpaws.essentialnotes", Context.MODE_PRIVATE);
+//        storage.edit().putBoolean("firstAccess", true).apply();
+//
+//        firstLoad = storage.getBoolean("firstAccess", true);
+
+//        Log.i("notes", String.valueOf(firstLoad));
+
         userNoteEditTextField = (EditText) findViewById(R.id.noteInputField);
         userNoteListView = (ListView) findViewById(R.id.notesListView);
 
@@ -148,14 +162,24 @@ public class MainActivity extends AppCompatActivity {
         notesAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, notesListItems);
         userNoteListView.setAdapter(notesAdapter);
         userNoteListView.setClickable(true);
+        userNoteListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                openDeleteNoteDialogBox(2);
+            }
+        });
 
-        if (showHintNote) {
+        if (firstLoad) {
             notesListItems.add(getResources().getString(R.string.note_hint_text));
+            notesListItems.add(getResources().getString(R.string.note_delete_text));
+
+//            storage.edit().putBoolean("firstAccess", false).apply();
+//            firstLoad = storage.getBoolean("firstAccess", true);
+
         }
 
         notesListItems.add("Second Note is here");
         notesListItems.add("This is the length of a note, this is the size of the text that will be held in this text field, the length is constricted by the parameter.");
-
 
     }
 

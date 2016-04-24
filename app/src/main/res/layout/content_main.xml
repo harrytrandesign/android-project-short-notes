@@ -9,6 +9,9 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:focusable="true"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="us.wetpaws.essentialnotes.MainActivity"
     tools:showIn="@layout/activity_main">
@@ -23,6 +26,24 @@
         android:paddingRight="@dimen/listview_horizontal_margin"
         android:divider="@color/lt_purple"
         android:dividerHeight="2px"/>
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textNoSuggestions|textVisiblePassword|textShortMessage"
+        android:id="@+id/noteInputField"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:lines="2"
+        android:singleLine="false"
+        android:maxLength="200"
+        android:background="@color/white"
+        android:textSize="@dimen/notes_text_size"
+        android:textColor="@color/grey"
+        android:hint="@string/edit_text_hint"
+        android:imeOptions="actionDone"
+        android:scrollHorizontally="false"/>
+
 </RelativeLayout>
 
 

@@ -2,14 +2,15 @@
     <string name="app_name">Seven Notes</string>
     <string name="action_settings">Clear All</string>
     <string name="action_bar_name">Essential Seven</string>
-    <string name="note_hint_text">Each note has a max character limit of 240.</string>
-    <string name="note_delete_text">Tap on a note to delete the note.</string>
+    <string name="note_hint_text">Hello, I am a note. I can be up to 200 characters long.</string>
+    <string name="note_delete_text">Tap me to delete me.</string>
     <string name="edit_text_hint">Start writing your note</string>
     <string name="clear_all_notes">Clear All</string>
-    <string name="delete_single_note">Delete This Note?</string>
-    <string name="delete_all_notes">Delete All Notes?</string>
+    <string name="delete_single_title">Delete Note?</string>
+    <string name="delete_all_title">Delete All Notes?</string>
     <string name="delete_single_message">Do you want to delete this note?</string>
-    <string name="delete_all_message">This will permanently delete all your notes, the notes are not recoverable. Do you want to proceed?</string>
+    <string name="delete_all_message">This will permanently delete all your notes, this action is not reversible. Do you wish to proceed?</string>
+    <string name="delete_confirmation">Deleted</string>
     <string name="option_choice_yes">Yes</string>
     <string name="option_choice_no">No</string>
 </resources>
