@@ -28,18 +28,17 @@ public class MainActivity extends AppCompatActivity {
 
     ArrayList<String> notesListItems;
     ArrayAdapter<String> notesAdapter;
-    Boolean hasRun;
-    SharedPreferences appIntro = null;
+    Boolean hasAppRunBefore;
+    SharedPreferences appIntroHint = null;
     EditText userNoteEditTextField;
     ListView userNoteListView;
 
 
     public void openDeleteNoteDialogBox(int oneOrTwo) {
-        int option = oneOrTwo;
 
         AlertDialog.Builder build = new AlertDialog.Builder(this);
 
-        if (option == 1) {
+        if (oneOrTwo == 1) {
             build.setIcon(R.drawable.android_5_black_full_trash);
             build.setTitle(R.string.delete_all_title);
             build.setMessage(R.string.delete_all_message);
@@ -58,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
-        } else if (option == 2) {
+        } else if (oneOrTwo == 2) {
             build.setIcon(R.drawable.android_5_black_full_trash);
             build.setTitle(R.string.delete_single_title);
             build.setMessage(R.string.delete_single_message);
@@ -118,8 +117,8 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         // Check if app is running for the very first time.
-        appIntro = getSharedPreferences("hasRunBefore_appIntro", 0); // Load the preferences.
-        hasRun = appIntro.getBoolean("hasRun_appIntro", false); // See if it's been run before with the default set as no.
+        appIntroHint = getSharedPreferences("hasRunBefore_appIntroHint", 0); // Load the preferences.
+        hasAppRunBefore = appIntroHint.getBoolean("hasRun_appIntroHint", false); // See if it's been run before with the default set as no.
 
         userNoteEditTextField = (EditText) findViewById(R.id.noteInputField);
         userNoteListView = (ListView) findViewById(R.id.notesListView);
@@ -166,14 +165,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Log.i("notes", "Before " + String.valueOf(hasRun));
-
-        if (!hasRun) {
+        if (!hasAppRunBefore) {
 
             // Save information that shows the app has now already run first time.
-            SharedPreferences settings = getSharedPreferences("hasRunBefore_appIntro", 0);
+            SharedPreferences settings = getSharedPreferences("hasRunBefore_appIntroHint", 0);
             SharedPreferences.Editor edit = settings.edit();
-            edit.putBoolean("hasRun_appIntro", true);
+            edit.putBoolean("hasRun_appIntroHint", true);
             edit.apply();
 
             notesListItems.add(getResources().getString(R.string.note_hint_text));
@@ -181,9 +178,7 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
-        Log.i("notes", "After " + String.valueOf(hasRun));
-
-        notesListItems.add("Second Note is here");
+        notesListItems.add("Adding a second note to this application is as easy as clicking the + sign.");
         notesListItems.add("This is the length of a note, this is the size of the text that will be held in this text field, the length is constricted by the parameter.");
 
     }
