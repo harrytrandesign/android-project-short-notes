@@ -197,11 +197,9 @@ public class MainActivity extends AppCompatActivity {
 
                 userNoteInput = userNoteEditTextField.getText().toString();
 
-                if (userNoteInput == null || userNoteInput.equals("")) {
+                if (userNoteInput.equals("")) {
 
-                    Toast.makeText(getApplicationContext(), "Please enter a note first.", Toast.LENGTH_SHORT).show();
-
-                    return;
+                    Toast.makeText(getApplicationContext(), "Enter a note first.", Toast.LENGTH_SHORT).show();
 
                 } else {
 
