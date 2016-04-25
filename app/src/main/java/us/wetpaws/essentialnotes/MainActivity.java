@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     SharedPreferences appIntroHint = null;
     customEditText userNoteEditTextField;
     ListView userNoteListView;
+    String userNoteInput;
     FloatingActionButton fab;
 
     public void closeKeyboardHideFab() {
@@ -153,7 +154,9 @@ public class MainActivity extends AppCompatActivity {
 
                     closeKeyboardHideFab();
 
-                    return  true;
+                    Log.i("notes", "Action done key works.");
+
+                    return true;
                 }
 
                 return false;
@@ -168,8 +171,9 @@ public class MainActivity extends AppCompatActivity {
 
                     closeKeyboardHideFab();
 
-                    Log.i("notes", "The back key works if this message shows");
+                    Log.i("notes", "Soft down button works.");
 
+                    return true;
                 }
 
                 return false;
@@ -191,7 +195,19 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                Log.i("notes", userNoteEditTextField.getText().toString());
+                userNoteInput = userNoteEditTextField.getText().toString();
+
+                if (userNoteInput == null || userNoteInput.equals("")) {
+
+                    Toast.makeText(getApplicationContext(), "Please enter a note first.", Toast.LENGTH_SHORT).show();
+
+                    return;
+
+                } else {
+
+                    Log.i("notes", userNoteInput);
+
+                }
 
             }
         });
