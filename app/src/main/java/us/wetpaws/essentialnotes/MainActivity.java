@@ -35,9 +35,9 @@ public class MainActivity extends AppCompatActivity {
 
     public void closeKeyboardHideFab() {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-        userNoteEditTextField.clearFocus();
+        imm.hideSoftInputFromWindow(userNoteEditTextField.getWindowToken(), 0);
         fab.setVisibility(View.INVISIBLE);
+        userNoteEditTextField.clearFocus();
         userNoteEditTextField.setText("");
         userNoteEditTextField.getText().clear();
     }
@@ -175,7 +175,18 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
-        
+
+        userNoteEditTextField.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+
+                    fab.setVisibility(View.VISIBLE);
+
+                }
+            }
+        });
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
