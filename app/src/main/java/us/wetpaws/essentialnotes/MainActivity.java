@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     SharedPreferences appIntroHint = null;
     EditText userNoteEditTextField;
     ListView userNoteListView;
+    FloatingActionButton fab;
 
 
     public void openDeleteNoteDialogBox(int oneOrTwo) {
@@ -91,6 +92,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        Log.i("notes", "Back Pressed");
+
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
 
@@ -120,6 +129,7 @@ public class MainActivity extends AppCompatActivity {
         appIntroHint = getSharedPreferences("hasRunBefore_appIntroHint", 0); // Load the preferences.
         hasAppRunBefore = appIntroHint.getBoolean("hasRun_appIntroHint", false); // See if it's been run before with the default set as no.
 
+        fab = (FloatingActionButton) findViewById(R.id.newNoteButton);
         userNoteEditTextField = (EditText) findViewById(R.id.noteInputField);
         userNoteListView = (ListView) findViewById(R.id.notesListView);
 
@@ -136,14 +146,36 @@ public class MainActivity extends AppCompatActivity {
 
                     InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                    userNoteEditTextField.clearFocus();
+                    fab.setVisibility(View.INVISIBLE);
+
                     return  true;
+                } else if (event.getKeyCode() == KeyEvent.KEYCODE_VOLUME_DOWN) {
+
+                    Log.i("notes", "soft down pressed");
+                    fab.setVisibility(View.INVISIBLE);
+
                 }
 
                 return false;
             }
         });
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.newNoteButton);
+        userNoteEditTextField.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+
+                    fab.setVisibility(View.VISIBLE);
+
+                } else {
+
+                    fab.setVisibility(View.INVISIBLE);
+
+                }
+            }
+        });
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -152,6 +184,8 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        fab.setVisibility(View.INVISIBLE);
 
         notesListItems = new ArrayList<>();
 
