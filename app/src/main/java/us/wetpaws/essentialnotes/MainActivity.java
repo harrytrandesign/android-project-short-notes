@@ -17,7 +17,6 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,10 +29,18 @@ public class MainActivity extends AppCompatActivity {
     ArrayAdapter<String> notesAdapter;
     Boolean hasAppRunBefore;
     SharedPreferences appIntroHint = null;
-    EditText userNoteEditTextField;
+    customEditText userNoteEditTextField;
     ListView userNoteListView;
     FloatingActionButton fab;
 
+    public void closeKeyboardHideFab() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+        userNoteEditTextField.clearFocus();
+        fab.setVisibility(View.INVISIBLE);
+        userNoteEditTextField.setText("");
+        userNoteEditTextField.getText().clear();
+    }
 
     public void openDeleteNoteDialogBox(int oneOrTwo) {
 
@@ -130,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
         hasAppRunBefore = appIntroHint.getBoolean("hasRun_appIntroHint", false); // See if it's been run before with the default set as no.
 
         fab = (FloatingActionButton) findViewById(R.id.newNoteButton);
-        userNoteEditTextField = (EditText) findViewById(R.id.noteInputField);
+        userNoteEditTextField = (customEditText) findViewById(R.id.noteInputField);
         userNoteListView = (ListView) findViewById(R.id.notesListView);
 
         if (userNoteEditTextField != null) {
@@ -144,38 +151,31 @@ public class MainActivity extends AppCompatActivity {
 
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
 
-                    InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-                    userNoteEditTextField.clearFocus();
-                    fab.setVisibility(View.INVISIBLE);
+                    closeKeyboardHideFab();
 
                     return  true;
-                } else if (event.getKeyCode() == KeyEvent.KEYCODE_VOLUME_DOWN) {
-
-                    Log.i("notes", "soft down pressed");
-                    fab.setVisibility(View.INVISIBLE);
-
                 }
 
                 return false;
             }
         });
 
-        userNoteEditTextField.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        userNoteEditTextField.setKeyImeChangeListener(new customEditText.KeyImeChange() {
             @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
+            public boolean onKeyIme(int keyCode, KeyEvent event) {
 
-                    fab.setVisibility(View.VISIBLE);
+                if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_UP) {
 
-                } else {
+                    closeKeyboardHideFab();
 
-                    fab.setVisibility(View.INVISIBLE);
+                    Log.i("notes", "The back key works if this message shows");
 
                 }
+
+                return false;
             }
         });
-
+        
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
