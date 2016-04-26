@@ -43,11 +43,12 @@ public class MainActivity extends AppCompatActivity {
         userNoteEditTextField.getText().clear();
     }
 
-    public void openDeleteNoteDialogBox(int oneOrTwo) {
+    public void openDeleteNoteDialogBox(int oneOrTwo, final int position) {
 
         AlertDialog.Builder build = new AlertDialog.Builder(this);
 
         if (oneOrTwo == 1) {
+
             build.setIcon(R.drawable.android_5_black_full_trash);
             build.setTitle(R.string.delete_all_title);
             build.setMessage(R.string.delete_all_message);
@@ -55,8 +56,17 @@ public class MainActivity extends AppCompatActivity {
             build.setPositiveButton(R.string.option_choice_yes, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
+
                     dialog.cancel();
+
                     Toast.makeText(getApplicationContext(), getResources().getString(R.string.delete_confirmation), Toast.LENGTH_SHORT).show();
+
+                    Log.i("notes", "Position is at " + String.valueOf(position));
+                    Log.i("notes", "Size of table is " + notesListItems.size());
+
+                    notesListItems.clear();
+                    notesAdapter.notifyDataSetChanged();
+
                 }
             });
             build.setNegativeButton(R.string.option_choice_no, new DialogInterface.OnClickListener() {
@@ -67,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
             });
 
         } else if (oneOrTwo == 2) {
+
             build.setIcon(R.drawable.android_5_black_full_trash);
             build.setTitle(R.string.delete_single_title);
             build.setMessage(R.string.delete_single_message);
@@ -74,8 +85,16 @@ public class MainActivity extends AppCompatActivity {
             build.setPositiveButton(R.string.option_choice_yes, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
+
                     dialog.cancel();
+
                     Toast.makeText(getApplicationContext(), getResources().getString(R.string.delete_confirmation), Toast.LENGTH_SHORT).show();
+
+                    Log.i("notes", "Position is at " + String.valueOf(position));
+
+                    notesListItems.remove(position);
+                    notesAdapter.notifyDataSetChanged();
+
                 }
             });
             build.setNegativeButton(R.string.option_choice_no, new DialogInterface.OnClickListener() {
@@ -138,6 +157,8 @@ public class MainActivity extends AppCompatActivity {
         hasAppRunBefore = appIntroHint.getBoolean("hasRun_appIntroHint", false); // See if it's been run before with the default set as no.
 
         fab = (FloatingActionButton) findViewById(R.id.newNoteButton);
+        fab.setVisibility(View.INVISIBLE);
+
         userNoteEditTextField = (customEditText) findViewById(R.id.noteInputField);
         userNoteListView = (ListView) findViewById(R.id.notesListView);
 
@@ -146,6 +167,7 @@ public class MainActivity extends AppCompatActivity {
             userNoteEditTextField.setMaxLines(4);
         }
 
+        // Hitting enter than the soft keyboard closes.
         userNoteEditTextField.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -163,6 +185,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // Pressing the soft down key on hardware closes the soft keyboard.
         userNoteEditTextField.setKeyImeChangeListener(new customEditText.KeyImeChange() {
             @Override
             public boolean onKeyIme(int keyCode, KeyEvent event) {
@@ -180,6 +203,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // On focus of the edit text we make fab visible.
         userNoteEditTextField.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -191,6 +215,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // Write the message into the array when fab is pressed.
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -203,14 +228,13 @@ public class MainActivity extends AppCompatActivity {
 
                 } else {
 
+//                  Need another check to make sure there aren't already 7 notes saved, before saving a new one.
                     Log.i("notes", userNoteInput);
 
                 }
 
             }
         });
-
-        fab.setVisibility(View.INVISIBLE);
 
         notesListItems = new ArrayList<>();
 
@@ -220,7 +244,9 @@ public class MainActivity extends AppCompatActivity {
         userNoteListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                openDeleteNoteDialogBox(2);
+
+                openDeleteNoteDialogBox(2, position);
+
             }
         });
 
@@ -259,9 +285,10 @@ public class MainActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.clearAllNotes) {
 
-            openDeleteNoteDialogBox(1);
+            openDeleteNoteDialogBox(1, notesListItems.size());
 
             return true;
+
         }
 
         return super.onOptionsItemSelected(item);
