@@ -34,13 +34,17 @@ public class MainActivity extends AppCompatActivity {
     String userNoteInput;
     FloatingActionButton fab;
 
+    public void clearTextField() {
+        userNoteEditTextField.clearFocus();
+        userNoteEditTextField.setText("");
+        userNoteEditTextField.getText().clear();
+    }
+
     public void closeKeyboardHideFab() {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(userNoteEditTextField.getWindowToken(), 0);
         fab.setVisibility(View.INVISIBLE);
-        userNoteEditTextField.clearFocus();
-        userNoteEditTextField.setText("");
-        userNoteEditTextField.getText().clear();
+        clearTextField();
     }
 
     public void openDeleteNoteDialogBox(int oneOrTwo, final int position) {
@@ -228,8 +232,20 @@ public class MainActivity extends AppCompatActivity {
 
                 } else {
 
-//                  Need another check to make sure there aren't already 7 notes saved, before saving a new one.
-                    Log.i("notes", userNoteInput);
+                    if (notesListItems.size() < 7) {
+
+                        // Need another check to make sure there aren't already 7 notes saved, before saving a new one.
+                        Log.i("notes", userNoteInput);
+
+                        notesListItems.add(userNoteInput);
+                        notesAdapter.notifyDataSetChanged();
+                        closeKeyboardHideFab();
+
+                    } else {
+
+                        Toast.makeText(getApplicationContext(), "Delete a note first.", Toast.LENGTH_SHORT).show();
+
+                    }
 
                 }
 
