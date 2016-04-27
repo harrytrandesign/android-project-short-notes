@@ -21,6 +21,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -33,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
     ListView userNoteListView;
     String userNoteInput;
     FloatingActionButton fab;
+    Gson gson;
+    TinyDB tinydb;
 
     public void clearTextField() {
         userNoteEditTextField.clearFocus();
@@ -49,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void openDeleteNoteDialogBox(int oneOrTwo, final int position) {
 
-        AlertDialog.Builder build = new AlertDialog.Builder(this);
+        AlertDialog.Builder build = new AlertDialog.Builder(this, R.style.CustomDialogTheme);
 
         if (oneOrTwo == 1) {
 
@@ -155,6 +159,8 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         setSupportActionBar(toolbar);
+
+        tinydb = new TinyDB(this);
 
         // Check if app is running for the very first time.
         appIntroHint = getSharedPreferences("hasRunBefore_appIntroHint", 0); // Load the preferences.
@@ -279,9 +285,14 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
-        notesListItems.add("Adding a second note to this application is as easy as clicking the + sign.");
-        notesListItems.add("This is the length of a note, this is the size of the text that will be held in this text field, the length is constricted by the parameter.");
+//        notesListItems.add("Adding a second note to this application is as easy as clicking the + sign.");
+//        notesListItems.add("This is the length of a note, this is the size of the text that will be held in this text field, the length is constricted by the parameter.");
 
+//        tinydb.putListString("all_user_notes", notesListItems);
+
+        Log.i("notes", tinydb.getString("all_user_notes"));
+
+        notesListItems.add(tinydb.getString("all_user_notes"));
     }
 
     @Override
