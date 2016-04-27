@@ -1,11 +1,11 @@
 <resources>
     <string name="app_name">Seven Notes</string>
     <string name="action_settings">Clear All</string>
-    <string name="action_bar_name">Essential Seven</string>
-    <string name="note_hint_text">Hello, I am a note. I can be up to 200 characters long.</string>
+    <string name="action_bar_name">Seven Notes</string>
+    <string name="note_hint_text">Hello, I am a note. I can be up to 200 characters long. To add a note type your message than tap the + button.</string>
     <string name="note_delete_text">Tap me to delete me.</string>
     <string name="edit_text_hint">Start writing your note</string>
-    <string name="clear_all_notes">Clear All</string>
+    <string name="clear_all_notes">Delete All</string>
     <string name="delete_single_title">Delete Note?</string>
     <string name="delete_all_title">Delete All Notes?</string>
     <string name="delete_single_message">Do you want to delete this note?</string>

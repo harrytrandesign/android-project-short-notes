@@ -27,7 +27,7 @@
         android:divider="@color/lt_purple"
         android:dividerHeight="2px"/>
 
-    <EditText
+    <us.wetpaws.essentialnotes.customEditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textNoSuggestions|textVisiblePassword|textShortMessage"
@@ -42,7 +42,8 @@
         android:textColor="@color/grey"
         android:hint="@string/edit_text_hint"
         android:imeOptions="actionDone"
-        android:scrollHorizontally="false"/>
+        android:scrollHorizontally="false" >
+    </us.wetpaws.essentialnotes.customEditText>
 
 </RelativeLayout>
 
