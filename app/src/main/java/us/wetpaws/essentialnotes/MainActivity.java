@@ -22,12 +22,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    ArrayList<String> notesListItems;
+    List<String> notesListItems;
     ArrayAdapter<String> notesAdapter;
     Boolean hasAppRunBefore;
     SharedPreferences appIntroHint = null;
@@ -36,19 +39,36 @@ public class MainActivity extends AppCompatActivity {
     String userNoteInput;
     FloatingActionButton fab;
     Gson gson;
-    TinyDB tinydb;
+    Type type;
+
+    public void saveTheNotesList() {
+
+        String usersNotesToList = new Gson().toJson(notesListItems);
+
+        SharedPreferences myPrefs = getSharedPreferences("us.wetpaws.essentialnotes", Context.MODE_PRIVATE);
+        SharedPreferences.Editor myEditor = myPrefs.edit();
+        myEditor.putString("users_saved_notes_list", usersNotesToList);
+        myEditor.apply();
+
+        Log.i("notes", "Currently Saved List " + usersNotesToList);
+
+    }
 
     public void clearTextField() {
+
         userNoteEditTextField.clearFocus();
         userNoteEditTextField.setText("");
         userNoteEditTextField.getText().clear();
+
     }
 
     public void closeKeyboardHideFab() {
+
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(userNoteEditTextField.getWindowToken(), 0);
         fab.setVisibility(View.INVISIBLE);
         clearTextField();
+
     }
 
     public void insertNoteIntoTable() {
@@ -66,7 +86,17 @@ public class MainActivity extends AppCompatActivity {
 
                 notesListItems.add(userNoteInput);
                 notesAdapter.notifyDataSetChanged();
+                saveTheNotesList();
                 closeKeyboardHideFab();
+
+//                jsonAllNotes = gson.toJson(notesListItems);
+//                Log.i("notes", "Currently Saved List " + jsonAllNotes);
+
+//                saved_notes = getSharedPreferences("all_user_notes", 0);
+//                saved_note = saved_notes.edit();
+//                saved_note.putString("all_user_saved_notes", jsonAllNotes);
+//                saved_note.apply();
+
 
             } else {
 
@@ -101,6 +131,7 @@ public class MainActivity extends AppCompatActivity {
 
                     notesListItems.clear();
                     notesAdapter.notifyDataSetChanged();
+                    saveTheNotesList();
 
                 }
             });
@@ -129,6 +160,7 @@ public class MainActivity extends AppCompatActivity {
 
                     notesListItems.remove(position);
                     notesAdapter.notifyDataSetChanged();
+                    saveTheNotesList();
 
                 }
             });
@@ -148,8 +180,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-
-        Log.i("notes", "System is paused.");
 
     }
 
@@ -187,7 +217,13 @@ public class MainActivity extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
 
-        tinydb = new TinyDB(this);
+        gson = new Gson();
+
+        SharedPreferences myPrefs = getSharedPreferences("us.wetpaws.essentialnotes", Context.MODE_PRIVATE);
+
+        String usersNotesToList = myPrefs.getString("users_saved_notes_list", "");
+
+        Log.i("notes", "Currently Saved List " + usersNotesToList);
 
         // Check if app is running for the very first time.
         appIntroHint = getSharedPreferences("hasRunBefore_appIntroHint", 0); // Load the preferences.
@@ -259,36 +295,33 @@ public class MainActivity extends AppCompatActivity {
 
                 insertNoteIntoTable();
 
-//                userNoteInput = userNoteEditTextField.getText().toString();
-//
-//                if (userNoteInput.equals("")) {
-//
-//                    Toast.makeText(getApplicationContext(), "Enter a note first.", Toast.LENGTH_SHORT).show();
-//
-//                } else {
-//
-//                    if (notesListItems.size() < 7) {
-//
-//                        Log.i("notes", userNoteInput);
-//
-//                        notesListItems.add(userNoteInput);
-//                        notesAdapter.notifyDataSetChanged();
-//                        closeKeyboardHideFab();
-//
-//                    } else {
-//
-//                        Toast.makeText(getApplicationContext(), "Delete a note first.", Toast.LENGTH_SHORT).show();
-//
-//                    }
-//
-//                }
-
             }
         });
 
-        notesListItems = new ArrayList<>();
+        if (usersNotesToList != null) {
 
-//        notesAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, notesListItems);
+            notesListItems = gson.fromJson(usersNotesToList, new TypeToken<List<String>>() {}.getType());
+
+        } else {
+
+            notesListItems = new ArrayList<>();
+
+        }
+
+        if (!hasAppRunBefore) {
+
+            // Save information that shows the app has now already run first time.
+            SharedPreferences settings = getSharedPreferences("hasRunBefore_appIntroHint", 0);
+            SharedPreferences.Editor edit = settings.edit();
+            edit.putBoolean("hasRun_appIntroHint", true);
+            edit.apply();
+
+            notesListItems.add(getResources().getString(R.string.note_hint_text));
+            notesListItems.add(getResources().getString(R.string.note_delete_text));
+            notesAdapter.notifyDataSetChanged();
+
+        }
+
         notesAdapter = new ArrayAdapter<String>(this, R.layout.my_row_layout, R.id.note, notesListItems);
         userNoteListView.setAdapter(notesAdapter);
         userNoteListView.setClickable(true);
@@ -301,27 +334,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        if (!hasAppRunBefore) {
-
-            // Save information that shows the app has now already run first time.
-            SharedPreferences settings = getSharedPreferences("hasRunBefore_appIntroHint", 0);
-            SharedPreferences.Editor edit = settings.edit();
-            edit.putBoolean("hasRun_appIntroHint", true);
-            edit.apply();
-
-            notesListItems.add(getResources().getString(R.string.note_hint_text));
-            notesListItems.add(getResources().getString(R.string.note_delete_text));
-
-        }
-
-//        notesListItems.add("Adding a second note to this application is as easy as clicking the + sign.");
-//        notesListItems.add("This is the length of a note, this is the size of the text that will be held in this text field, the length is constricted by the parameter.");
-
-//        tinydb.putListString("all_user_notes", notesListItems);
-
-//        Log.i("notes", tinydb.getString("all_user_notes"));
-
-//        notesListItems.add(tinydb.getString("all_user_notes"));
     }
 
     @Override
