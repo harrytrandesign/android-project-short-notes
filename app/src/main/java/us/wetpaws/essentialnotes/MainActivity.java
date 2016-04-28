@@ -24,7 +24,6 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +38,6 @@ public class MainActivity extends AppCompatActivity {
     String userNoteInput;
     FloatingActionButton fab;
     Gson gson;
-    Type type;
 
     public void saveTheNotesList() {
 
@@ -298,29 +296,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        if (usersNotesToList != null) {
-
-            notesListItems = gson.fromJson(usersNotesToList, new TypeToken<List<String>>() {}.getType());
-
-        } else {
-
-            notesListItems = new ArrayList<>();
-
-        }
-
-        if (!hasAppRunBefore) {
-
-            // Save information that shows the app has now already run first time.
-            SharedPreferences settings = getSharedPreferences("hasRunBefore_appIntroHint", 0);
-            SharedPreferences.Editor edit = settings.edit();
-            edit.putBoolean("hasRun_appIntroHint", true);
-            edit.apply();
-
-            notesListItems.add(getResources().getString(R.string.note_hint_text));
-            notesListItems.add(getResources().getString(R.string.note_delete_text));
-            notesAdapter.notifyDataSetChanged();
-
-        }
+        notesListItems = new ArrayList<>();
+        notesListItems = new Gson().fromJson(usersNotesToList, new TypeToken<List<String>>() {}.getType());
 
         notesAdapter = new ArrayAdapter<String>(this, R.layout.my_row_layout, R.id.note, notesListItems);
         userNoteListView.setAdapter(notesAdapter);
@@ -333,6 +310,27 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        if (!hasAppRunBefore) {
+
+            // Save information that shows the app has now already run first time.
+            SharedPreferences settings = getSharedPreferences("hasRunBefore_appIntroHint", 0);
+            SharedPreferences.Editor edit = settings.edit();
+            edit.putBoolean("hasRun_appIntroHint", true);
+            edit.apply();
+
+            notesListItems.add(getResources().getString(R.string.note_hint_text));
+            notesListItems.add(getResources().getString(R.string.note_delete_text));
+            saveTheNotesList();
+
+        }
+
+//        if (usersNotesToList != null) {
+//
+//            notesListItems = new Gson().fromJson(usersNotesToList, new TypeToken<List<String>>() {}.getType());
+//            saveTheNotesList();
+//
+//        }
 
     }
 
