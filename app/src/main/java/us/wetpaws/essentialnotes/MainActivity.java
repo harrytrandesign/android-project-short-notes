@@ -51,6 +51,33 @@ public class MainActivity extends AppCompatActivity {
         clearTextField();
     }
 
+    public void insertNoteIntoTable() {
+        userNoteInput = userNoteEditTextField.getText().toString();
+
+        if (userNoteInput.equals("")) {
+
+            Toast.makeText(getApplicationContext(), "Enter a note first.", Toast.LENGTH_SHORT).show();
+
+        } else {
+
+            if (notesListItems.size() < 7) {
+
+                Log.i("notes", userNoteInput);
+
+                notesListItems.add(userNoteInput);
+                notesAdapter.notifyDataSetChanged();
+                closeKeyboardHideFab();
+
+            } else {
+
+                Toast.makeText(getApplicationContext(), "Delete a note first.", Toast.LENGTH_SHORT).show();
+
+            }
+
+        }
+
+    }
+
     public void openDeleteNoteDialogBox(int oneOrTwo, final int position) {
 
         AlertDialog.Builder build = new AlertDialog.Builder(this, R.style.CustomDialogTheme);
@@ -184,7 +211,7 @@ public class MainActivity extends AppCompatActivity {
 
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
 
-                    closeKeyboardHideFab();
+                    insertNoteIntoTable();
 
                     Log.i("notes", "Action done key works.");
 
@@ -230,37 +257,39 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                userNoteInput = userNoteEditTextField.getText().toString();
+                insertNoteIntoTable();
 
-                if (userNoteInput.equals("")) {
-
-                    Toast.makeText(getApplicationContext(), "Enter a note first.", Toast.LENGTH_SHORT).show();
-
-                } else {
-
-                    if (notesListItems.size() < 7) {
-
-                        // Need another check to make sure there aren't already 7 notes saved, before saving a new one.
-                        Log.i("notes", userNoteInput);
-
-                        notesListItems.add(userNoteInput);
-                        notesAdapter.notifyDataSetChanged();
-                        closeKeyboardHideFab();
-
-                    } else {
-
-                        Toast.makeText(getApplicationContext(), "Delete a note first.", Toast.LENGTH_SHORT).show();
-
-                    }
-
-                }
+//                userNoteInput = userNoteEditTextField.getText().toString();
+//
+//                if (userNoteInput.equals("")) {
+//
+//                    Toast.makeText(getApplicationContext(), "Enter a note first.", Toast.LENGTH_SHORT).show();
+//
+//                } else {
+//
+//                    if (notesListItems.size() < 7) {
+//
+//                        Log.i("notes", userNoteInput);
+//
+//                        notesListItems.add(userNoteInput);
+//                        notesAdapter.notifyDataSetChanged();
+//                        closeKeyboardHideFab();
+//
+//                    } else {
+//
+//                        Toast.makeText(getApplicationContext(), "Delete a note first.", Toast.LENGTH_SHORT).show();
+//
+//                    }
+//
+//                }
 
             }
         });
 
         notesListItems = new ArrayList<>();
 
-        notesAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, notesListItems);
+//        notesAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, notesListItems);
+        notesAdapter = new ArrayAdapter<String>(this, R.layout.my_row_layout, R.id.note, notesListItems);
         userNoteListView.setAdapter(notesAdapter);
         userNoteListView.setClickable(true);
         userNoteListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -290,9 +319,9 @@ public class MainActivity extends AppCompatActivity {
 
 //        tinydb.putListString("all_user_notes", notesListItems);
 
-        Log.i("notes", tinydb.getString("all_user_notes"));
+//        Log.i("notes", tinydb.getString("all_user_notes"));
 
-        notesListItems.add(tinydb.getString("all_user_notes"));
+//        notesListItems.add(tinydb.getString("all_user_notes"));
     }
 
     @Override
