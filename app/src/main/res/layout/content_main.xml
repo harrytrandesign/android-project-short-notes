@@ -24,16 +24,18 @@
         android:layout_centerHorizontal="true"
         android:paddingLeft="@dimen/listview_horizontal_margin"
         android:paddingRight="@dimen/listview_horizontal_margin"
+        android:paddingBottom="@dimen/listview_floor_padding"
         android:divider="@color/lt_purple"
         android:dividerHeight="2px"/>
 
     <us.wetpaws.essentialnotes.customEditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:inputType="textNoSuggestions|textVisiblePassword|textShortMessage"
+        android:inputType="textLongMessage|textAutoCorrect|textCapSentences"
         android:id="@+id/noteInputField"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
+        android:layout_alignParentStart="true"
+        android:paddingRight="@dimen/edittext_right_margin"
         android:lines="2"
         android:singleLine="false"
         android:maxLength="200"
