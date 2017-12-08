@@ -1,7 +1,8 @@
 <resources>
-    <string name="app_name">Seven Notes</string>
+    <string name="app_name">Top Seven Notes</string>
     <string name="action_settings">Clear All</string>
-    <string name="action_bar_name">Seven Notes</string>
+    <string name="action_bar_name">Short Notes</string>
+    <string name="application_name">Top7 Notes</string>
     <string name="note_hint_text">Hello, I am a note. I can be up to 200 characters long. To add a note type your message than tap the + button.</string>
     <string name="note_delete_text">Tap me to delete me.</string>
     <string name="edit_text_hint">Start writing your note</string>

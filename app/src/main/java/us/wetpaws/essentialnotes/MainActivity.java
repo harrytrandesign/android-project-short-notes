@@ -29,12 +29,11 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    List<String> notesListItems;
+    ArrayList<String> notesListItems;
     ArrayAdapter<String> notesAdapter;
     Boolean hasAppRunBefore;
     SharedPreferences appIntroHint = null;
     customEditText userNoteEditTextField;
-    ListView userNoteListView;
     String userNoteInput;
     FloatingActionButton fab;
     Gson gson;
@@ -78,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
 
         } else {
 
-            if (notesListItems.size() < 7) {
+            if (notesListItems.size() < 100) {
 
                 Log.i("notes", userNoteInput);
 
@@ -217,6 +216,8 @@ public class MainActivity extends AppCompatActivity {
 
         gson = new Gson();
 
+        ListView userNoteListView;
+
         SharedPreferences myPrefs = getSharedPreferences("us.wetpaws.essentialnotes", Context.MODE_PRIVATE);
 
         String usersNotesToList = myPrefs.getString("users_saved_notes_list", "");
@@ -227,11 +228,34 @@ public class MainActivity extends AppCompatActivity {
         appIntroHint = getSharedPreferences("hasRunBefore_appIntroHint", 0); // Load the preferences.
         hasAppRunBefore = appIntroHint.getBoolean("hasRun_appIntroHint", false); // See if it's been run before with the default set as no.
 
-        fab = (FloatingActionButton) findViewById(R.id.newNoteButton);
-        fab.setVisibility(View.INVISIBLE);
-
         userNoteEditTextField = (customEditText) findViewById(R.id.noteInputField);
         userNoteListView = (ListView) findViewById(R.id.notesListView);
+
+        notesListItems = new ArrayList<>();
+
+        if (!hasAppRunBefore) {
+
+            // Save information that shows the app has now already run first time.
+            SharedPreferences settings = getSharedPreferences("hasRunBefore_appIntroHint", 0);
+            SharedPreferences.Editor edit = settings.edit();
+            edit.putBoolean("hasRun_appIntroHint", true);
+            edit.apply();
+
+            notesListItems.add(getResources().getString(R.string.note_hint_text));
+            notesListItems.add(getResources().getString(R.string.note_delete_text));
+            saveTheNotesList();
+
+        } else {
+
+            notesListItems = new Gson().fromJson(usersNotesToList, new TypeToken<List<String>>() {}.getType());
+
+        }
+
+        notesAdapter = new ArrayAdapter<>(this, R.layout.my_row_layout, R.id.note, notesListItems);
+        userNoteListView.setAdapter(notesAdapter);
+
+        fab = (FloatingActionButton) findViewById(R.id.newNoteButton);
+        fab.setVisibility(View.INVISIBLE);
 
         if (userNoteEditTextField != null) {
             userNoteEditTextField.setHorizontallyScrolling(false);
@@ -296,11 +320,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        notesListItems = new ArrayList<>();
-        notesListItems = new Gson().fromJson(usersNotesToList, new TypeToken<List<String>>() {}.getType());
-
-        notesAdapter = new ArrayAdapter<String>(this, R.layout.my_row_layout, R.id.note, notesListItems);
-        userNoteListView.setAdapter(notesAdapter);
         userNoteListView.setClickable(true);
         userNoteListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -310,20 +329,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
-        if (!hasAppRunBefore) {
-
-            // Save information that shows the app has now already run first time.
-            SharedPreferences settings = getSharedPreferences("hasRunBefore_appIntroHint", 0);
-            SharedPreferences.Editor edit = settings.edit();
-            edit.putBoolean("hasRun_appIntroHint", true);
-            edit.apply();
-
-            notesListItems.add(getResources().getString(R.string.note_hint_text));
-            notesListItems.add(getResources().getString(R.string.note_delete_text));
-            saveTheNotesList();
-
-        }
 
 //        if (usersNotesToList != null) {
 //

@@ -8,8 +8,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/row_padding"
-        android:paddingBottom="@dimen/row_padding"
+        android:paddingBottom="@dimen/row_pad_bottom"
+        android:paddingLeft="@dimen/row_indent"
+        android:paddingRight="@dimen/row_indent"
         android:text="New Text"
+        android:textSize="@dimen/notes_list_text_size"
+        android:textColor="@color/grey"
+        android:textStyle="normal"
         android:id="@+id/note"
         android:layout_gravity="center_horizontal"/>
 </LinearLayout>
